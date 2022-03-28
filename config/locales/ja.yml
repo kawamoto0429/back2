@@ -1,0 +1,22 @@
+ja:
+  activerecord:
+    models:
+      user: ユーザー
+      folder: フォルダ
+      todo: Todo
+      plan: plan
+    attributes:
+      user:
+        email: Email
+        password: パスワード
+        password_confirmation: 確認パスワード
+      folder:
+        name: フォルダ名
+        format: フォーマット
+      todo:
+        content: Todo名
+      plan:
+        title: タイトル名
+        place: 場所
+        start: 開始時間
+        end: 終了時間
