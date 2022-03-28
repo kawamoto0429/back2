@@ -3,7 +3,7 @@ class TodoesController < ApplicationController
     todo = Todo.new(
       content: params[:data][:name], 
       folder_id: params[:data][:folder], 
-      memo: params[:data][:memo]
+      memo: params[:data][:memo],
     )
    
     if todo.save
