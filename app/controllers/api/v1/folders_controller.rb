@@ -18,11 +18,10 @@ class Api::V1::FoldersController < ApplicationController
     if folder.format_id == 1
       plans = folder.plans
       render :json => [folder, plans]
-    elsif folder.format_id == 2
+    end
+    if folder.format_id == 2
       todoes = folder.todoes
       render :json => [folder, todoes]
-    else
-      render :json => "error"
     end
   end
   
@@ -40,9 +39,6 @@ class Api::V1::FoldersController < ApplicationController
   end
 
   def destroy
-    p ">>>>>>>>>>>>>"
-    p request.headers['Authorization']
-    p "======================="
     user = User.find(params[:user_id])
     folder = Folder.find(params[:id])
     if logged_in?
