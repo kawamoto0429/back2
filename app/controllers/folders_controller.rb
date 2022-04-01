@@ -19,7 +19,7 @@ class FoldersController < ApplicationController
   def create
     p folder_params
     # folder = Folder.new(folder_params)
-    folder = Folder.new(name: params[:data][:name], format_id: params[:data][:format]
+    folder = Folder.new(name: params[:data][:name], format_id: params[:data][:format])
     if folder.save
       render :json => "created!!"
     else
