@@ -4,9 +4,6 @@ class Api::V1::SessionsController < ApplicationController
     if user && user.authenticate(params[:user][:password])
       payload = {user_id: user.id}
       token = encode_token(payload)
-      p "====="
-      p token
-      p "====="
       session[:user_id] = user.id
       p "======="
       p session
