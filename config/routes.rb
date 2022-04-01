@@ -13,7 +13,9 @@ Rails.application.routes.draw do
       get "plans/alone", to:"plans#alone"
       get "plans/find", to: "plans#find"
       resources :plans
-      resources :users
+      
+      resources :users 
+      get "/auto_login", to: "sessions#auto_login"
       post "loginIn", to: "sessions#create"
       get "session", to: "sessions#index"
       get "logout", to: "sessions#destroy"

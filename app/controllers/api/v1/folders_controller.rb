@@ -1,48 +1,38 @@
 class Api::V1::FoldersController < ApplicationController
   def index
-    user = User.find(params[:id])
-    if user.password_digest == params[:password]
+    p "----------"
+    p request.headers['Authorization']
+    p "==="
+    if logged_in?
+      user = User.find(params[:user_id])
       folders = user.folders
-      p "======"
-      p folders
-      p "======"
       render :json => folders
     else
-      render :json => "error"
+      render :json => {errors: "message"}
     end
   end
 
   def show
     user = User.find(params[:user_id])
     folder = Folder.find(params[:id])
-    if user.id == folder.user_id
-      if folder.format_id == 1
-        plans = folder.plans
-        render :json => [folder, plans]
-      elsif folder.format_id == 2
-        todoes = folder.todoes
-        render :json => [folder, todoes]
-      else
-        render :json => "error"
-      end
+    if folder.format_id == 1
+      plans = folder.plans
+      render :json => [folder, plans]
+    elsif folder.format_id == 2
+      todoes = folder.todoes
+      render :json => [folder, todoes]
     else
       render :json => "error"
     end
   end
   
   def create
-    p "========"
-    p folder_params[:format]
-    p "========"
     folder = Folder.new(
                         name: folder_params[:name], 
                         format_id: folder_params[:format],
                         user_id: folder_params[:user_id]
                       )
-    "======"
-    p folder
-    "======"
-    if folder.save
+    if folder.save && logged_in?
       render :json => "created!!"
     else
       render :json => {message: folder.errors.full_messages}
@@ -50,19 +40,24 @@ class Api::V1::FoldersController < ApplicationController
   end
 
   def destroy
+    p ">>>>>>>>>>>>>"
+    p request.headers['Authorization']
+    p "======================="
     user = User.find(params[:user_id])
     folder = Folder.find(params[:id])
-    if user.id == folder.user_id
+    if logged_in?
       folder.destroy
       render :json => "delete!!"
     else
-      render :json => "no!!"
+      render :json => "error!!"
     end
   end
 
   def todo
-    folders = Folder.where(format_id: 2, user_id: params[:user_id])
-    render :json => folders
+    if logged_in?
+      folders = Folder.where(format_id: 2, user_id: params[:user_id])
+      render :json => folders
+    end
   end
 
   def plan

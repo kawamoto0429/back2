@@ -1,7 +1,7 @@
 class Api::V1::PlansController < ApplicationController
   def index
-    user = User.find(params[:id])
-    if user.password_digest == params[:password]
+    user = User.find(params[:user_id])
+    if logged_in?
       plans = user.plans
       render :json => plans
     else
@@ -9,9 +9,6 @@ class Api::V1::PlansController < ApplicationController
     end
   end
   def create
-    p "========"
-    p plan_params
-    p "========"
     plan = Plan.new(
                     title: plan_params[:title],
                     place: plan_params[:place],
@@ -23,25 +20,16 @@ class Api::V1::PlansController < ApplicationController
                     memo: plan_params[:memo],
                     user_id: plan_params[:user_id],
                   )
-    if plan.save
+    if logged_in? && plan.save
       render :json => "created!!!!"
     else
       render :json => {message: plan.errors.full_messages}
     end              
   end
 
-  def update
-    plan = Plan.find(params[:id])
-    if plan.update(plan_params)
-      render :json => "update"
-    else
-      render :json => "error"
-    end
-  end
-
   def show 
-    if Plan.find(params[:id])
-      plan = Plan.find(params[:id])
+    plan = Plan.find(params[:id])
+    if plan && logged_in?
       render :json => plan
     else
       render :json => "error"
@@ -51,7 +39,7 @@ class Api::V1::PlansController < ApplicationController
   def destroy
     user = User.find(params[:user_id])
     plan = Plan.find(params[:id])
-    if user.id == plan.user_id
+    if logged_in?
       plan.delete
       render :json => "delete!!"
     else
@@ -59,17 +47,25 @@ class Api::V1::PlansController < ApplicationController
     end
   end
 
-  def alone
-    plans = Plan.where(folder_id: nil)
-    render :json => plans
+  def update
+    plan = Plan.find(params[:id])
+    if plan.update(plan_params) && logged_in?
+      render :json => "update"
+    else
+      render :json => "error"
+    end
   end
 
+  # def alone
+  #   plans = Plan.where(folder_id: nil)
+  #   render :json => plans
+  # end
+
   def find
-    p "====="
-    p params
-    p "====="
-    plans = Plan.where(start: params[:date], user_id: params[:user_id])
-    render :json => plans
+    if logged_in?
+      plans = Plan.where(start: params[:date], user_id: params[:user_id])
+      render :json => plans
+    end
   end
 
   private
