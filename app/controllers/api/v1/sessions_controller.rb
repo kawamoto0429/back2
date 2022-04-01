@@ -5,9 +5,6 @@ class Api::V1::SessionsController < ApplicationController
       payload = {user_id: user.id}
       token = encode_token(payload)
       session[:user_id] = user.id
-      p "======="
-      p session
-      p "======="
       render :json => {user: user, jwt: token}
     else
       render :json => "error"
