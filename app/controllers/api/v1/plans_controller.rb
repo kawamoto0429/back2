@@ -2,7 +2,7 @@ class Api::V1::PlansController < ApplicationController
   def index
     user = User.find(params[:user_id])
     if logged_in?
-      plans = user.plans
+      plans = user.plans.order(id: "DESC")
       render :json => plans
     else
       render :json => "error"

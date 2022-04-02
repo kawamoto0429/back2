@@ -5,7 +5,7 @@ class Api::V1::FoldersController < ApplicationController
     p "==="
     if logged_in?
       user = User.find(params[:user_id])
-      folders = user.folders
+      folders = user.folders.order(id: "DESC")
       render :json => folders
     else
       render :json => {errors: "message"}
@@ -16,10 +16,10 @@ class Api::V1::FoldersController < ApplicationController
     user = User.find(params[:user_id])
     folder = Folder.find(params[:id])
     if folder.format_id == 1
-      plans = folder.plans
+      plans = folder.plans.order(id: "DESC")
       render :json => [folder, plans]
     elsif folder.format_id == 2
-      todoes = folder.todoes
+      todoes = folder.todoes.order(id: "DESC")
       render :json => [folder, todoes]
     else
       render :json => "error"
@@ -55,13 +55,13 @@ class Api::V1::FoldersController < ApplicationController
 
   def todo
     if logged_in?
-      folders = Folder.where(format_id: 2, user_id: params[:user_id])
+      folders = Folder.where(format_id: 2, user_id: params[:user_id]).order(id: "DESC")
       render :json => folders
     end
   end
 
   def plan
-    folders = Folder.where(format_id: 1, user_id: params[:user_id])
+    folders = Folder.where(format_id: 1, user_id: params[:user_id]).order(id: "DESC")
     render :json => folders
   end
 

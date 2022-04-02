@@ -4,7 +4,7 @@ class Api::V1::TodoesController < ApplicationController
     p request.headers['Authorization']
     p "===========+++++=========="
     user = User.find(params[:user_id])
-    todoes = user.todoes
+    todoes = user.todoes.order(id: "DESC")
     render :json => todoes
   end
   def create
