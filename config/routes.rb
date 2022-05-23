@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  root to: "application#error"
   namespace 'api' do
     namespace 'v1' do
       get "formats/index", to: "formats#index"
@@ -21,4 +22,6 @@ Rails.application.routes.draw do
       get "logout", to: "sessions#destroy"
     end
   end
+  get "*not_found", to: "application#error"
+  post "*not_found", to: "application#error"
 end
